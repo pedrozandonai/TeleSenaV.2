@@ -25,23 +25,7 @@ public class ControleTeleSena {
 
         distribuiPremio();
 
-        for (int i = 0; i < ganhadores.length; i++){
-            if (getGanhadores().length > 1 && getGanhadores()[i] != null){
-                System.out.println("GANHADOR " + (i+1) + " : " + getGanhadores()[i].getNome());
-                System.out.println("PRÊMIO TOTAL : "+ getGanhadores()[i].getValorPremiacao());
-                for (int k = 0; k < getGanhadores()[i].getTeleSenas().length; k++){
-                    System.out.println("CARTELA DO GANHADOR: "+ Arrays.toString(getCartelaSorteada()));
-                    System.out.println("CARTELA SORTEADA: "+ Arrays.toString(getCartelaGanhadora()));
-                }
-            } else if (getGanhadores().length <= 1 && getGanhadores()[i] != null) {
-                System.out.println("GANHADOR: "+  getGanhadores()[i].getNome());
-                System.out.println("PRÊMIO TOTAL : "+ getGanhadores()[i].getValorPremiacao());
-                for (int k = 0; k < getGanhadores()[i].getTeleSenas().length; k++){
-                    System.out.println("CARTELA DO GANHADOR: "+ Arrays.toString(getCartelaSorteada()));
-                    System.out.println("CARTELA SORTEADA: "+ Arrays.toString(getCartelaGanhadora()));
-                }
-            }
-        }
+        imprimeInformações();
     }
 
 //    // Cria os numeros a serem inseridos dentro das Tele Senas de forma aleatória e sem repetição
@@ -82,6 +66,8 @@ public class ControleTeleSena {
                     for (int k = 0; k < ganhadores.length; k++) {
                         if (ganhadores[k] == null && !jaEhGanhador(pessoa.getNome())) {
                             ganhadores[k] = new Pessoa(pessoa.getNome());
+                            setCartelaGanhadora(cartelas);
+                            setCartelaSorteada(cartelas);
                             contadorGanhadores++;
                         }
                     }
@@ -154,15 +140,6 @@ public class ControleTeleSena {
         setTelesVendidas(telesVendidas);
     }
 
-    // Método utilizado apenas para testar o programa
-    public void criaUmPraTeste(){
-        for (int i = 0; i < pessoas.length; i++){
-            for (int k = 0; k < 1; k++){
-                teleSena.setNumerosDaPessoa(teleSena.getArrayUm());
-            }
-        }
-    }
-
     // Verifica a função que procura algum ganhador e acrescenta um numero caso não haja algum
     public void criaGanhador(){
             int comprimentoArrayUm = teleSena.getArrayUm().length + 1;
@@ -200,10 +177,14 @@ public class ControleTeleSena {
 
     // Método que faz a distribuição do prêmio em dinheiro
     public void distribuiPremio(){
-        double premioTotal = ((getTelesVendidas() * 10.00)*0.8)/ganhadores.length;
+        int count = 0;
+        for (int i = 0; i < ganhadores.length; i++){
+            if (ganhadores[i] != null){
+                count++;
+            }
+        }
 
-        System.out.println(getTelesVendidas());
-        System.out.println(ganhadores.length);
+        double premioTotal = ((getTelesVendidas() * 10.00)*0.8)/count;
 
         for (int i = 0; i < ganhadores.length; i++){
             if (ganhadores[i] != null){
@@ -211,6 +192,69 @@ public class ControleTeleSena {
             }
         }
     }
+
+    // Método que anuncia os ganhadores do sorteio
+    public String[] nomeDosGanhadores(){
+        String[] nomesGanhadores = new String[ganhadores.length];
+        for (int i = 0; i < ganhadores.length; i++){
+            if (getGanhadores().length > 1 && getGanhadores()[i] != null){
+                System.out.println("GANHADOR " + (i+1) + " : " + getGanhadores()[i].getNome());
+                System.out.println("PRÊMIO TOTAL : "+ getGanhadores()[i].getValorPremiacao());
+                int x = 0;
+                while (x < 1){
+                    System.out.println("CARTELA DO GANHADOR: "+ Arrays.toString(getCartelaSorteada()));
+                    x++;
+                }
+            } else if (getGanhadores().length <= 1 && getGanhadores()[i] != null) {
+                System.out.println("GANHADOR: "+  getGanhadores()[i].getNome());
+                System.out.println("PRÊMIO TOTAL : "+ getGanhadores()[i].getValorPremiacao());
+                int x = 0;
+                while (x < ganhadores.length){
+                    System.out.println("CARTELA DO GANHADOR: "+ Arrays.toString(getCartelaSorteada()));
+                    x++;
+                }
+            }
+
+        }
+
+        for (int i = 0; i < getGanhadores().length; i++){
+            if (getGanhadores()[i] != null){
+                nomesGanhadores[i] = getGanhadores()[i].getNome();
+            }
+        }
+        System.out.println("CARTELA SORTEADA: "+ Arrays.toString(getCartelaGanhadora()));
+        return nomesGanhadores;
+    }
+
+    // Método que imprime todas informações conforme ordenado
+    public void imprimeInformações(){
+
+        //Números Sorteados na Tele Sena
+        System.out.println("Números sorteados na Tele Sena: " + Arrays.toString(getCartelaSorteada()));
+
+        //Quantidade de Tele Senas Vendidas
+        System.out.println("\nQuantidade de Teles vendidas: " + getTelesVendidas());
+
+        //Quantidade de ganhadores
+        int x = 0;
+        for (int i = 0; i < getGanhadores().length; i++){
+            if (getGanhadores()[i] != null){
+                x++;
+            }
+        }
+        System.out.println("\nQuantidade de Ganhadores: " + x);
+
+        //Nome dos ganhadores
+        System.out.println();
+        nomeDosGanhadores();
+
+        // Valor total das Tele Senas vendidas
+        System.out.println("\nValor total das Tele Senas vendidas: "+ "R$ "+getTelesVendidas()*10);
+
+        // Lucro arrecadado pelo Silvio Santos
+        System.out.println("\nLucro obtido pelo Sílvio Santos com a Tele Sena: " +  "R$ "+ ((getTelesVendidas() * 10.00)*0.2));
+    }
+
 
     public ControleTeleSena(Pessoa[] pessoas) {
         this.pessoas = pessoas;
